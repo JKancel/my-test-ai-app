@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import '@radix-ui/themes/styles.css';
-import { Theme } from '@radix-ui/themes';
+import { Box, Flex, ScrollArea, Skeleton, Text, Theme } from '@radix-ui/themes';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
+import { Card, CardContent } from '@/components/ui/card';
 
 
 const formSchema = z.object({
@@ -23,7 +24,7 @@ const formSchema = z.object({
 
 export default function Home() {
   const [response, setResponse] = useState<string>('');
-  const [,setLoading] = useState<boolean>(false);
+  const [loading ,setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { toast, dismiss } = useToast();
 
@@ -42,7 +43,6 @@ export default function Home() {
         index++;
       } else {
         clearInterval(interval); 
-        setLoading(false);
       }
     }, 10); 
   };
@@ -69,7 +69,7 @@ export default function Home() {
       if (res.status !== 200) {
         setError(data.message || 'Something went wrong');
       } else {
-        // setResponse(data.text);
+        setLoading(false);
         simulateResponse(data.text);
       }
     } catch (err) {
@@ -81,7 +81,7 @@ export default function Home() {
 
   return (
     <Theme>
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 md:px-0 flex-col">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 md:px-0 flex-col space-y-3">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6 bg-white rounded-xl shadow-lg max-w-lg w-full">
           <FormField
@@ -107,20 +107,43 @@ export default function Home() {
           </Button>
         </form>
 
-      {/* {loading && (
-          <Toast>
-            <ToastTitle>Submitting...</ToastTitle>
-            <ToastDescription>Generating a Response.</ToastDescription>
-          </Toast>
-        )} */}
+      {loading && (
+          <Flex direction="column" gap="3" className='max-w-lg'>
+            <Text>
+              <Skeleton>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
+                felis tellus, efficitur id convallis a, viverra eget libero. Nam magna
+                erat, fringilla sed commodo sed, aliquet nec magna.
+              </Skeleton>
+            </Text>
+        
+            <Skeleton>
+              <Text>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
+                felis tellus, efficitur id convallis a, viverra eget libero. Nam magna
+                erat, fringilla sed commodo sed, aliquet nec magna.
+              </Text>
+            </Skeleton>
+          </Flex>
+        )}
       {error && <Alert variant="destructive" className="mt-4 max-w-lg mx-auto">
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>}
       {response && (
-        <Alert variant="default" className="mt-4 max-w-lg mx-auto">
-          <AlertDescription>{response}</AlertDescription>
-        </Alert>
+        <Card className="w-full max-w-lg rounded-md border border-gray-300 shadow-sm">
+          <CardContent className="p-4 md:p-6">
+        <ScrollArea type="auto" scrollbars="vertical" style={{ height: 180 }}>
+        <Box p="2" pr="8">
+          <Flex direction="column" gap="4">
+            <Text as="p">
+            {response}
+            </Text>
+          </Flex>
+        </Box>
+      </ScrollArea>
+      </CardContent>
+      </Card>
       )}
     </Form>
     </div>
