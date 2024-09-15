@@ -20,9 +20,10 @@ const formSchema = z.object({
   prompt: z.string(),
 })
 
+
 export default function Home() {
   const [response, setResponse] = useState<string>('');
-  // const [loading, setLoading] = useState<boolean>(false);
+  const [,setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { toast, dismiss } = useToast();
 
@@ -32,9 +33,22 @@ export default function Home() {
       prompt: "",
     },
   });
+
+  const simulateResponse = (fullResponse: string) => {
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < fullResponse.length) {
+        setResponse((prev) => prev + fullResponse[index]);
+        index++;
+      } else {
+        clearInterval(interval); 
+        setLoading(false);
+      }
+    }, 10); 
+  };
   
   const onSubmit = async ({ prompt }: z.infer<typeof formSchema>) => {
-    // setLoading(true);
+    setLoading(true);
     setError(null);
     setResponse('');
     toast({
@@ -55,12 +69,12 @@ export default function Home() {
       if (res.status !== 200) {
         setError(data.message || 'Something went wrong');
       } else {
-        setResponse(data.text);
+        // setResponse(data.text);
+        simulateResponse(data.text);
       }
     } catch (err) {
       setError('Error fetching response');
     } finally {
-      // setLoading(false);
       dismiss();
     }
   };
