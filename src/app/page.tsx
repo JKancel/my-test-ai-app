@@ -81,7 +81,7 @@ export default function Home() {
 
   return (
     <Theme>
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 md:px-0 flex-col">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6 bg-white rounded-xl shadow-lg max-w-lg w-full">
           <FormField
@@ -94,7 +94,7 @@ export default function Home() {
                     <Textarea
                       placeholder="Describe your intention..."
                       rows={5}
-                      className='bg-white border border-gray-300 focus:border-gray-500 focus:ring-2 focus:ring-gray-500 rounded-md p-4 text-gray-900 shadow-sm transition-all duration-200'
+                      className='w-full border-gray-300 rounded-md p-4 text-sm md:text-base'
                       {...field}
                     />
                 </FormControl>
