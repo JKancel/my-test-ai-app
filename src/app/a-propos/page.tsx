@@ -1,7 +1,5 @@
-export const page = () => {
+export default function Apropos() {
   return (
     <div>My Super page</div>
   )
 };
-
-export default page;
